@@ -9,9 +9,16 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - run: chmod +x gradlew
-      - run: ./gradlew assembleDebug
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+      - name: Fix gradlew
+        run: |
+          ls -la
+          chmod +x gradlew || chmod +x ./gradlew
+          ls -la
+      - name: Build APK
+        run: ./gradlew assembleDebug --stacktrace
       - uses: actions/upload-artifact@v4
         with:
           name: apk
-          path: app/build/outputs/apk/debug/*.apk
+          path: "**/build/outputs/apk/debug/*.apk"
